@@ -357,7 +357,9 @@ Page<User> users= userRepository.findAll((Root<User> root, CriteriaQuery<?> quer
 }, PageRequest.of(pageNum - 1, pageSize, Sort.by(orderBy.toArray(new String[0]))));
 ```
 
-当调用`JpaSpecificationExecutor<E>`中的方法时，需要实现`Specification`接口中的`toPredicate`方法（本接口是一个函数接口，可以使用匿名函数的形式简写）。
+当调用`JpaSpecificationExecutor<E>`中的方法时，需要实现`Specification`接口中的`toPredicate`方法（本接口是一个函数接口，可以使用匿名函数的形式简写）。参数`Root<?>`相当于查询语句中的from部分，参数`CriteriaQuery`相当于一个查询语句，用于设置where部分和select部分，参数`CriteriaBuilder`用于构建查询语句。
+
+### 分页和排序 ###
 
 
 
