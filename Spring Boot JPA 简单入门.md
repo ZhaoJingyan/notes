@@ -361,7 +361,7 @@ Page<User> users= userRepository.findAll((Root<User> root, CriteriaQuery<?> quer
 
 ### 分页和排序 ###
 
-
+JPA的排序和分页非常简单，只需要在方法上加上`Pageable`（负责分页和排序）和`Sort`参数（只负责排序）参数。如果需要构造`Pageable`和`Sort`类，需要调用`PageRequest.of(...)`和`Sort.by(...)`。
 
 ### Entity Manager ###
 
