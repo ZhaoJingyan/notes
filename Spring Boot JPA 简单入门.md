@@ -365,6 +365,19 @@ JPA的排序和分页非常简单，只需要在方法上加上`Pageable`（负�
 
 ### Entity Manager ###
 
+有时候需要直接调用JPA的API查询数据库，就需要通过Entity Manager操作。获取EntityManager使用如下方法：
 
+```java
+
+@PersistenceContext
+private EntityManager entityManager;
+
+```
+
+`entityManager.remove(Object entity)`: 删除实体
+
+`entityManager.refresh(Object entity)`: 刷新实体（重新读取实体）
+
+`entityManager.createNativeQuery(String sql, Class<?> clazz)`: 运行本地sql，并映射到class中
 
 ## 事务管理 ##
