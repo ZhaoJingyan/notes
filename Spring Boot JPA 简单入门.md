@@ -390,7 +390,7 @@ JPA主要通过`@Transactional`注解实现事务管理。`@Transactional`可以
 
 `boolean readOnly() default false`：只读，不能对数据库进行写操作
 
-`Propagation propagation() default Propagation.REQUIRED`：传播行为，一共有七种传播行为。
+`Propagation propagation() default Propagation.REQUIRED`：传播行为，一共有七种传播行为：
 
 |      名称      |                                          解释                                          |
 | -------------- | -------------------------------------------------------------------------------------- |
@@ -402,4 +402,18 @@ JPA主要通过`@Transactional`注解实现事务管理。`@Transactional`可以
 | NEVER          | 以非事务方式执行，如果当前存在事务，则抛出异常。                                       |
 | NESTED         | 支持当前事务，如果当前事务存在，则执行一个嵌套事务，如果当前没有事务，就新建一个事务。 |
 
-`Isolation isolation() default Isolation.DEFAULT`：设置事务隔离级别
+`Isolation isolation() default Isolation.DEFAULT`：设置事务隔离级别，一共五种：
+
+|       名称       |                  解释                  |
+| ---------------- | -------------------------------------- |
+| READ_UNCOMMITTED | 读取未提交数据(会出现脏读, 不可重复读) |
+| READ_COMMITTED   | 读取已提交数据(会出现不可重复读和幻读) |
+| REPEATABLE_READ  | 可重复读(会出现幻读)                   |
+| SERIALIZABLE     | 串行化                                 |
+
+> 需要对一些名词做出解释：
+> 脏读 : 一个事务读取到另一事务未提交的更新数据。
+> 不可重复读 : 在同一事务中, 多次读取同一数据返回的结果有所不同, 换句话说,后续读取可以读到另一事务已提交的更新数据. 相反, "可重复读"在同一事务中多次读取数据时, 能够保证所读数据一样, 也就是后续读取不能读到另一事务已提交的更新数据。
+> 幻读 : 一个事务读到另一个事务已提交的insert数据。
+> MYSQL: 默认为REPEATABLE_READ级别
+> SQLSERVER: 默认为READ_COMMITTED
