@@ -313,17 +313,17 @@ JPA可以映射复杂的一对一(`@OneToOne`)、一对多(`@OneToMany` & `@Many
 
 Spring Data可以根据方法名称，自动生成SQL语句，方法命名需要遵循一定的规则：
 
-keyword         | sample                   | JPQL snippet                  |
-----------------------------------------|----------------------|---------------------------|
-find                | findByA                  |...where a=?1                 |
-And                |findByAandB           |...where a=?1 and b = ?2|
-Or                   |findByAorB             |...where a=?1 or b= ?2   |
-StartingWith   |findByAStartingWith|...where a like ?1+'%'      |
-EndingWith     |findByAEndingWith|...where a like '%' + ?1    |
-not                 |findByANot             |...where a <> ?1             |
-findTop3,findFirst3        |findTop3ByA            |...where a = ?1 limit 3    |
-findDistinct                                        | findDistinctByA|select distinct * ...|
-OrderBy|findByOrderByAAscAndBDesc| ... order by a,b desc|
+|       keyword       |          sample           |       JPQL snippet       |
+| ------------------- | ------------------------- | ------------------------ |
+| find                | findByA                   | ...where a=?1            |
+| And                 | findByAandB               | ...where a=?1 and b = ?2 |
+| Or                  | findByAorB                | ...where a=?1 or b= ?2   |
+| StartingWith        | findByAStartingWith       | ...where a like ?1+'%'   |
+| EndingWith          | findByAEndingWith         | ...where a like '%' + ?1 |
+| not                 | findByANot                | ...where a <> ?1         |
+| findTop3,findFirst3 | findTop3ByA               | ...where a = ?1 limit 3  |
+| findDistinct        | findDistinctByA           | select distinct * ...    |
+| OrderBy             | findByOrderByAAscAndBDesc | ... order by a,b desc    |
 
 我们只需要在持久层接口中声明这些方法即可。
 
@@ -381,3 +381,25 @@ private EntityManager entityManager;
 `entityManager.createNativeQuery(String sql, Class<?> clazz)`: 运行本地sql，并映射到class中
 
 ## 事务管理 ##
+
+JPA主要通过`@Transactional`注解实现事务管理。`@Transactional`可以作用于方法、类、结构上。（当作用于类上时，该类的所有 public 方法将都具有该类型的事务属性，同时，我们也可以在方法级别使用该标注来覆盖类级别的定义。）
+
+> 虽然 @Transactional 注解可以作用于接口、接口方法、类以及类方法上，但是 Spring 建议不要在接口或者接口方法上使用该注解，因为这只有在使用基于接口的代理时它才会生效，因为注解是不能继承的，这就意味着如果你正在使用基于类的代理时，那么事务的设置将不能被基于类的代理所识别，而且对象也将不会被事务代理所包装（将被确认为严重的）。另外， @Transactional 注解应该只被应用到 public 方法上，这是由 Spring AOP 的本质决定的。如果你在 protected、private 或者默认可见性的方法上使用 @Transactional 注解，这将被忽略，也不会抛出任何异常。
+
+`@Transactional`通过属性来控制事务的隔离级别和传播类型。具体配置如下：
+
+`boolean readOnly() default false`：只读，不能对数据库进行写操作
+
+`Propagation propagation() default Propagation.REQUIRED`：传播行为，一共有七种传播行为。
+
+|      名称      |                                          解释                                          |
+| -------------- | -------------------------------------------------------------------------------------- |
+| REQUIRED(默认) | 支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择                       |
+| SUPPORTS       | 支持当前事务，如果当前没有事务，就以非事务方式执行。                                   |
+| MANDATORY      | 支持当前事务，如果当前没有事务，就抛出异常。                                           |
+| REQUIRES_NEW   | 新建事务，如果当前存在事务，把当前事务挂起。                                           |
+| NOT_SUPPORTED  | 以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。                             |
+| NEVER          | 以非事务方式执行，如果当前存在事务，则抛出异常。                                       |
+| NESTED         | 支持当前事务，如果当前事务存在，则执行一个嵌套事务，如果当前没有事务，就新建一个事务。 |
+
+`Isolation isolation() default Isolation.DEFAULT`：设置事务隔离级别
