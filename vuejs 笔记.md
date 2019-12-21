@@ -1,6 +1,6 @@
 # vue 学习笔记 #
 
-Vue的详细教程请进入[官网]()
+Vue的详细教程请进入[官网](https://cn.vuejs.org/)
 
 ## 组件 ##
 
@@ -28,7 +28,7 @@ export default {
 
     /**
      * 使用的子组件，
-     */
+     */    
     components: {Child, Child2: import('@/component/Child2')}
 
     /**
@@ -80,8 +80,52 @@ div{
 </style>
 ```
 
+## 属性 ##
+
+props有很多定义方法，可以定义一个数组：
+
+```javascript
+props: ['pro1', 'pro2', 'pro3']
+```
+
+ 也可以通过使用类定义:
+
+```javascript
+props: {
+    pro1: Number,
+    pro2: String,
+    pro3: Boolean,
+    pro4: Function
+}
+```
+
+也可以采用更详细的定义：
+
+```javascript
+props:{
+    pro1: {
+        type: Number,
+        default: 100
+    },
+    pro2: {
+        type: [Number, String],
+        default: function(){
+            return {test:'Hello'}
+        }
+    },
+    pro3: {
+        type: Array,
+        required: true,
+        validator: function (value) {
+            // 返回布尔值
+            return true;
+        }
+    }
+}
+```
+
 ## vue-cli3 ## 
-s
+
 ## vuex ##
 
 ## vue with typescript ##
