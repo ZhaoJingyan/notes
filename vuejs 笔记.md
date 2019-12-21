@@ -80,7 +80,7 @@ div{
 </style>
 ```
 
-## 属性 ##
+### 属性 ###
 
 props有很多定义方法，可以定义一个数组：
 
@@ -124,7 +124,57 @@ props:{
 }
 ```
 
-## vue-cli3 ## 
+### 事件 ###
+
+在组件上绑定事件:
+
+```html
+<!-- 常规用法，testMethod为方法 -->
+<test-component v-on:test-event="testMethod" />
+<!-- 缩写 -->
+<test-component @test-event="testMethod" />
+<!-- 传入$event -->
+<test-component @test-event="testMethod($event)" />
+<!-- 通过接收变量 -->
+<test-component @test-event="data = $event.target.value" />
+<!-- 连续向上弹射 -->
+<test-component @test-event="$emit('other-event', $event.target.value)" />
+```
+
+使用`this.$emit('test-event')`向上弹射事件，带参数的弹射`this.$emit('test-event', 100)`。
+
+### 双向绑定  ###
+
+双向绑定两种，一种是`v-model`，一种是`.sync`:
+
+```html
+<!-- v-model 相当于传入value属性的同时绑定input事件 -->
+<test-component v-model="test" />
+<test-component :value="test" @input="test = $event.target.value" />
+<!-- .sync  相当于绑定了test属性和update:test -->
+<test-component test.sync="data" />
+<test-component :test="data" @update:test="val => data = val" />
+```
+
+### 插槽  ###
+
+插槽是解决组件标签体中内用的。最简单的用法：
+
+```html
+<!-- 父组件template -->
+<div>
+    <test-component>
+        <p>Hello</p>
+    </test-component>
+</div>
+<!-- 子组件template -->
+<div>
+    <!-- 这里会显示<p>Hello</p> -->
+    <slot></slot>
+</div>
+```
+t
+## vue-cli3 ##
 
 ## vuex ##
 
