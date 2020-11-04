@@ -173,7 +173,9 @@ props:{
     <slot></slot>
 </div>
 ```
-t
+
+###  渲染函数 ###
+
 ## vue-cli3 ##
 
 ## vuex ##

@@ -3,7 +3,7 @@
 [toc]
 
 ## 环境搭建 ##
-
+     
 在一个Spring Boot的项目基础上，在pom.xml添加依赖：
 
 ```xml
@@ -44,6 +44,10 @@ spring:
     open-in-view: true # 解决一个测试时no Session错误，此配置只针对web开发
     database-platform: org.hibernate.dialect.MySQL8Dialect # 指定sql方言
 ```
+
+在启动类上添加注解`@EnableJpaRepositories`，该注解可以指定`basePackages`.
+
+
 
 ## Entity 映射（实体映射） ##
 
@@ -305,6 +309,13 @@ JPA可以映射复杂的一对一(`@OneToOne`)、一对多(`@OneToMany` & `@Many
 
 `@JoinTable`: 多对多关系会需要一个中间表，@JoinTable就是控制这个中间表的。@JoinTable是非必须的。
 
+### 其他注解 ###
+
+`@NamedQueries`&`@NamedQuery`:
+`@NamedNativeQueries`&`@NamedNativeQuery`:
+`@SqlResultSetMappings`,`@SqlResultSetMapping`,`@EntityResult`,`@ColumnResult`：
+`@NamedEntityGraphs`,`@NamedEntityGraph`,`@EntityGraph`,`@NamedAttributeNode`:
+
 ## 持久层：Repository ##
 
 持久层通过动态代理的方式实现。我们只需要指定接口和配置即可。持久层接口需要继承`JpaRepository<E,I>`。`JpaRepository`已经实现了部分基本CRUD方法，如findById，save和deleteById。
@@ -339,9 +350,11 @@ Set<Entity> findSomething(String a,Date beginDate, Date endDate);
 List<Entity> findSomething2(@Param("a") String a);
 
 // 通过设置nativeQuery，可以使用原生的sql语言
-@Query(value = "from tb_entity as e where e.a = ?1", nativeQuery=true)
+@Query(value = "select * from tb_entity as e where e.a = ?1", nativeQuery=true)
 List<Entity> findSomething3(String a);
 ```
+
+
 
 ### 结构化查询 ###
 
@@ -380,7 +393,15 @@ private EntityManager entityManager;
 
 `entityManager.createNativeQuery(String sql, Class<?> clazz)`: 运行本地sql，并映射到class中
 
+```kotlin
+// (Kotlin Code) createNativeQuery 的常用用法：
+val query = entityManager.createNativeQuery("select * from user")
+query.unwrap(NativeQueryImpl::class.java).setResultTransformer(Transformers.aliasToBean(EntityObject::class)).resultList
+```
+
 ## 事务管理 ##
+
+开启JPA的事务管理，需要在启动类上添加注解`@EnableTransactionManagement`.
 
 JPA主要通过`@Transactional`注解实现事务管理。`@Transactional`可以作用于方法、类、结构上。（当作用于类上时，该类的所有 public 方法将都具有该类型的事务属性，同时，我们也可以在方法级别使用该标注来覆盖类级别的定义。）
 
